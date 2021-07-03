@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nodejs
+  labels:
+    run: my-nodejs
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 30080
+    protocol: TCP
+  selector:
+    run: my-nodejs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-sample
+spec:
+  selector:
+    matchLabels:
+      run: my-nodejs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-nodejs
+    spec:
+      containers:
+      - name: my-nodejs
+        image: ygu26/nodejs-sample
+        ports:
+        - containerPort: 8000

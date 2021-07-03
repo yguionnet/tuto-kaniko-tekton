@@ -1,9 +1,9 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: sinatra-hello-world-tekton-demo-image
+  name: nodejs-sample-image
 spec:
   type: image
   params:
     - name: url
-      value: ygu26/sinatra-hello-3
+      value: ygu26/nodejs-sample

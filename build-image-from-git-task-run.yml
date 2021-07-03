@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceAccountName: dockerhub-service
   taskRef:
-    name: build-docker-image-from-git-source
+    name: build-docker-image-from-git-source-task
   params:
     - name: pathToDockerFile
       value: Dockerfile
@@ -13,9 +13,9 @@ spec:
     inputs:
       - name: docker-source
         resourceRef:
-          name: sinatra-hello-world-git
+          name: nodejs-sample-git
     outputs:
       - name: builtImage
         resourceRef:
-          name: sinatra-hello-world-tekton-demo-image
+          name: nodejs-sample-image
 
