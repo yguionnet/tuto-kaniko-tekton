@@ -1,0 +1,7 @@
+kubectl create clusterrole nodejs-sample-role \
+               --verb="*" \
+               --resource=deployments,deployments.apps \
+               --resource=services
+kubectl create clusterrolebinding nodejs-sample-binding \
+             --clusterrole=nodejs-sample-role \
+             --serviceaccount=default:dockerhub-service

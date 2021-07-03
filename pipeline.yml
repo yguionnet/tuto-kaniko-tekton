@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: nodejs-sample-pipeline
+spec:
+  resources:
+    - name: source-repo
+      type: git
+    - name: web-image
+      type: image
+  tasks:
+    - name: build-nodejs-sample
+      taskRef:
+        name: build-image-from-git-task
+      params:
+        - name: pathToDockerFile
+          value: Dockerfile
+      resources:
+        inputs:
+          - name: docker-source
+            resource: source-repo
+        outputs:
+          - name: builtImage
+            resource: web-image
+    - name: deploy-web
+      taskRef:
+        name: deploy-using-kubectl
+      resources:
+        inputs:
+          - name: source
+            resource: source-repo
+          - name: image
+            resource: web-image
+            from:
+              - build-nodejs-sample
+      params:
+        - name: path
+          value: /workspace/source/deployment.yml
+        - name: yamlPathToImage
+          value: "spec.template.spec.containers[0].image"
+      runAfter:
+        - build-nodejs-sample
+    - name: deploy-service
+      taskRef:
+        name: service-using-kubectl
+      resources:
+        inputs:
+          - name: source
+            resource: source-repo
+      params:
+        - name: path
+          value: /workspace/source/service.yml
+      runafter:
+        - deploy-web
