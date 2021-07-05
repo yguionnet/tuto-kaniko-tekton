@@ -1,0 +1,15 @@
+# Installation de kubernetes avec minikube
+minikube start --vm-driver=docker --kubernetes-version=v1.19.4
+
+
+
+# Installation de tekton
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+
+
+# Configuration de la persistence des artefacts
+kubectl create configmap config-artifact-pvc \
+                         --from-literal=size=5Gi \
+                         --from-literal=storageClassName=standard \
+                         -o yaml -n tekton-pipelines \
+                         --dry-run=client | kubectl replace -f -
